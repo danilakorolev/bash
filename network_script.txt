@@ -1,0 +1,68 @@
+ 
+#!/bin/bash
+
+if [ $(id -u) != 0 ]; then
+    echo "You need to be root for this shit"
+    exit 1
+fi
+
+if [ $# -lt 1 ]; then
+    echo "Insert new ip pliiiis"
+    exit
+fi
+
+new_ip="$1"
+
+config_file="/etc/network/interfaces"
+
+if [ ! -f "$config_file" ]; then
+    echo "Network config file didn't found"
+    exit 1
+fi
+
+backup_file="etc/network/interfaces/backup/netconf.backup"
+cp "$config_file" "$backup_file"
+
+sed -i "s/^ *address .*$address $new_ip/" "$config_file"
+
+systemctl restart networking.service
+
+if [ $? -eq 0 ]; then
+    echo "I couldn't restart network service"
+    echo "Puttin everyfink back"
+    cp "$backup_file" "$config_file"
+    systemctl restart networking.service
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
